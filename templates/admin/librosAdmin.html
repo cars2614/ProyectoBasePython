@@ -14,22 +14,22 @@
                 <form action="/admin/librosAdmin/guardar" method="post" enctype="multipart/form-data">
 
                     <div class="mb-3">
-                        <label for="nombreLibro" class="form-label">Nombre:</label>
-                        <input type="text" class="form-control" name="nombreLibro" id="nombreLibro"
+                        <label for="nombre_libro" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" name="nombre_libro" id="nombre_libro"
                             aria-describedby="helpId" placeholder="Escriba el nombre del libro" />
 
                     </div>
 
                     <div class="mb-3">
-                        <label for="imagenLibro" class="form-label">Imagen:</label>
-                        <input type="file" class="form-control" name="imagenLibro" id="imagenLibro"
+                        <label for="imagen_libro" class="form-label">Imagen:</label>
+                        <input type="file" class="form-control" name="imagen_libro" id="imagen_libro"
                             aria-describedby="helpId" placeholder="Seleccione la Imagen" />
 
                     </div>
 
                     <div class="mb-3">
-                        <label for="urlDescarga" class="form-label">Url Descarga:</label>
-                        <input type="text" class="form-control" name="urlDescarga" id="urlDescarga"
+                        <label for="url_libro" class="form-label">Url Descarga:</label>
+                        <input type="text" class="form-control" name="url_libro" id="url_libro"
                             aria-describedby="helpId" placeholder="Escriba URL de desacarga" />
 
                     </div>
@@ -71,7 +71,7 @@
 
                         <td>
 
-                            <form action="/admin/libros/borrar" method="post">
+                            <form action="/admin/librosAdmin/borrar" method="post">
 
                                 <input type="text" class="form-control" name="id_libro" id="id_libro"
                                     value="{{ libro[0] }}" hidden />

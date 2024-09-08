@@ -58,7 +58,8 @@ def admin_login():
 
 @app.route('/librosAdmin')
 def admin_libros():
-        
+    """ Esta funcion me sirve para mostrar todos los libros de mi base de datos          
+          """
     conn = mysql.connector.connect(**config) # Crear una conexión al servidor MySQL
     cursor = conn.cursor() # Crear un cursor para ejecutar comandos SQL    
     cursor.execute('SELECT * FROM libros') # Ejecutar una consulta SQL     
@@ -76,59 +77,70 @@ def admin_libros():
 
 @app.route('/admin/librosAdmin/guardar', methods=['POST']) # Recibe los datos enviados por POST
 def admin_libros_guardar():
-   print(request.form['nombreLibro'])
-   print(request.files['imagenLibro']) #este se debe recibir como un archivo
-   print(request.form['urlDescarga'])
+        
+        """ Esta funcion me sirve para ingresar los datos enviados 
+         mediente un formulario a mi base de datos. """   
+             
+        """ verifica si llegan bien los datos
+        print(request.form['nombreLibro'])
+        print(request.files['imagenLibro']) #este se debe recibir como un archivo
+        print(request.form['urlDescarga']) """
+
+        nombre_libro = request.form['nombre_libro']
+        imagen_libro = request.files['imagen_libro'] #se debe recibir como documento
+        url_libro    = request.form['url_libro']
+
+        """ El siguente codigo es para cambiarle el nombre a la imagen 
+         se cambia para que no genere conflicto con el nombre de la imagen 
+          al momento de almacenarla """
+        #variable tiempo para cambiar el nombre de la imagen
+        tiempo = datetime.now()
+        horaActual = tiempo.strftime('%Y%H%M%S')
+
+        #cambio de nombre de la imagen y guardado
+        if imagen_libro.filename!="":
+
+            nuevoNombreImagen = f"{horaActual}_{imagen_libro.filename}"
+            imagen_libro.save("templates/sitio/img/libros/"+nuevoNombreImagen)
+
+        conn = mysql.connector.connect(**config) # Crear una conexión al servidor MySQL
+
+        datos = (nombre_libro,nuevoNombreImagen,url_libro)  #Agregamos los datos a la consulta
+        sql = "INSERT INTO `libros` (`nombre_libro`, `imagen_libro`, `url_libro`) VALUES (%s,%s,%s);"        
+        cursor = conn.cursor() # Crear un cursor para ejecutar comandos SQL
+        cursor.execute(sql, datos) # Ejecutar una consulta SQL 
+        conn.commit() #confirma la insercion SQL.... sin este paso no se ejecuta nada
+        # Cerrar el cursor y la conexión
+        cursor.close()
+        conn.close()
+        
    
-   return redirect('/librosAdmin')
+        return redirect('/librosAdmin')
    
 
 
-   """  nombre = request.form['nombreLibro']
-    imagen = request.files['imagenLibro']
-    url = request.form['urlDescarga']
+        
 
-    #variable tiempo para cambiar el nombre de la imagen
-    tiempo = datetime.now()
-    horaActual = tiempo.strftime('%Y%H%M%S')
-
-    #cambio de nombre de la imagen y guardado
-    if imagen.filename!="":
-        nuevoNombreImagen = f"{horaActual}_{imagen.filename}"
-        imagen.save("templates/sitio/img/libros/"+nuevoNombreImagen) """
-
-    #insert a base de datos
-""" 
-
-    sql = "INSERT INTO `libros` (`nombre_libro`, `imagen_libro`, `url_libro`) VALUES (%s,%s,%s);"
-    datos = (nombre,nuevoNombreImagen,url)  #Agregamos los datos a la consulta
-    cursor = conexion.cursor()  #creamos un objeto
-    cursor.execute(sql,datos) #ejecutamos el objeto con la consulta y los datos recibidos
-    conexion.commit() #confirmamos la ejecucion 
-
-    return redirect('/admin/libros')
-"""
-""" @app.route('/admin/libros/borrar',methods=['POST'])
+            
+@app.route('/admin/librosAdmin/borrar',methods=['POST'])
 def admin_libros_borrar():  
 
     id_libro = request.form['id_libro']
- """
-""" #solo hace la consulta
-    cursor.execute("SELECT * FROM libros WHERE id_libro = %s",(id_libro))
-    libro = cursor.fetchall()
-    conexion.commit()
-    print(libro)
-    #fin de la consulta
+ 
+    conn = mysql.connector.connect(**config) # Crear una conexión al servidor MySQL
 
-    #Eliminacion de registro
-    cursor.execute("DELETE FROM libros WHERE id_libro = %s",(id_libro) )  
-    conexion.commit() #confirmamos ejecucion
-    #Fin de eliminacion registro
-   """
+    #dato = (id_libro)
+    sql = "DELETE FROM libros WHERE id_libro =  %s;"        
+    cursor = conn.cursor() # Crear un cursor para ejecutar comandos SQL
+    cursor.execute(sql,[id_libro]) # Ejecutar una consulta SQL 
+    conn.commit() #confirma la insercion SQL.... sin este paso no se ejecuta nada
+    # Cerrar el cursor y la conexión
+    cursor.close()
+    conn.close()
+
+    return redirect('/librosAdmin')
 
 
-"""
-    return redirect('/admin/libros')"""
 
 
 
