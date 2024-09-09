@@ -66,13 +66,20 @@
                     <tr class="">
                         <td>{{ libro[0] }}</td>
                         <td>{{ libro[1] }}</td>
-                        <td>{{ libro[2] }}</td>
+                        <td>
+                            <img src="/img/libros/{{ libro[2] }}" width="60" class="img-fluid rounded-top" alt=""  />
+                            <br>
+                            {{ libro[2] }}
+
+                            
+                        </td>
                         <td>{{ libro[3] }}</td>
 
                         <td>
 
                             <form action="/admin/librosAdmin/borrar" method="post">
-
+                                
+                                <!-- se pone transparente mediante hidden -->
                                 <input type="text" class="form-control" name="id_libro" id="id_libro"
                                     value="{{ libro[0] }}" hidden />
                                 <input class="btn btn-danger" type="submit" value="Eliminar">

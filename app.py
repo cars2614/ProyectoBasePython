@@ -5,7 +5,7 @@ from flask import request                 #recepciona la informacion "DEL FORMUL
 from flask import redirect                #redirecciona "MUESTRA LA INFORMACION PARA LAS TABLAS"
 import mysql.connector                    #Se importa libreria para conexion a base de datos 
 from datetime import datetime             #Se importa para colocar un tiempo exacto "Para la imagen"
-from flask import send_from_directory 
+from flask import send_from_directory     #optenemos informacion de la imagen
 from flask import abort #obtenemos la informacion de la imagen, es necesaria para mostrar las imagenes
 import os
 
@@ -32,10 +32,13 @@ def inicio():
     #print(url_for('nosotros'))
     return render_template('sitio/index.html')
 
-@app.route('/templates/sitio/img/libros/<imagen>')
+
+""" Mostramos la imagen y la enviamos a la ruta  """
+@app.route('/img/libros/<imagen>')
 def imagenes(imagen):
     print(imagen)
-    return send_from_directory(os.path.join('template/sitio/img/libros'),imagen)
+    return send_from_directory(os.path.join('templates/sitio/img/libros'),imagen)
+
 
 @app.route('/libros')
 def libros():
@@ -129,7 +132,20 @@ def admin_libros_borrar():
  
     conn = mysql.connector.connect(**config) # Crear una conexión al servidor MySQL
 
-    #dato = (id_libro)
+    """ seleccionamos el libro para borrarlo  """   
+    sql2 = "SELECT libros.imagen_libro FROM libros WHERE libros.id_libro =  %s;"        
+    cursor = conn.cursor() # Crear un cursor para ejecutar comandos SQL 
+    cursor.execute(sql2,[id_libro])   
+    libroParaEliminarImagen = cursor.fetchall() # Obtener los resultados de la consulta
+    conn.commit()
+    print(f"este libro se va a eliminar {libroParaEliminarImagen}")
+
+    if os.path.exists("templates/sitio/img/libros/"+str(libroParaEliminarImagen[0][0])):
+        os.unlink("templates/sitio/img/libros/"+str(libroParaEliminarImagen[0][0]))
+
+
+
+    
     sql = "DELETE FROM libros WHERE id_libro =  %s;"        
     cursor = conn.cursor() # Crear un cursor para ejecutar comandos SQL
     cursor.execute(sql,[id_libro]) # Ejecutar una consulta SQL 
