@@ -30,6 +30,7 @@
             <div class="col-md-4">
                 <br><br>
 
+               
                 <div class="card">
                     <div class="card-header">Inicio Sesion</div>
                     <div class="card-body">
@@ -57,15 +58,27 @@
 
 
                     </div>
+                    
 
-                    <div class="card-footer text-muted"></div>
+                    <div class="card-footer text-muted">
+                        {% if mensaje: %}
+                        <div class="alert alert-primary" role="alert">
+                            <strong>
+                                
+                                <h4>{{mensaje}}</h4>
+                                
+                            </strong>
+                        </div>
+                        {% endif%}
+                        
+                    </div>
                 </div>
 
             </div>
 
             <!-- caja derecha -->
             <div class="col-md-4">
-
+               
             </div>
 
         </div>

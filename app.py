@@ -80,6 +80,8 @@ def admin_index():
 def admin_login():
     return render_template('admin/loginAdmin.html')
 
+
+
 """ Ruta para login, solo se valida por codigo, NO por 
     base de datos """
 @app.route('/admin/loginAdmin', methods=['POST'])
@@ -98,7 +100,7 @@ def admin_login_post():
     else:
         print(f"datos incorrectos")
 
-    return render_template('admin/loginAdmin.html')
+    return render_template('admin/loginAdmin.html', mensaje = "Datos incorrectos .|.")
 
 @app.route('/admin/cerrar')
 def admin_cerrar_session():
