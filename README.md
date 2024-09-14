@@ -44,7 +44,9 @@ Guia para realizar el proyecto: https://www.youtube.com/watch?v=TjaG7243BF0&t=63
 6. Creacion de estructura web:
     carpeta -> templates "debe llamarse asi"
 
-VOY EN MINUTO 2:41:00
+# Diseño
+https://bootswatch.com/
+descargar el archivo css 
 
 
 

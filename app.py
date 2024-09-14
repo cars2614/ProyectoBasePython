@@ -40,6 +40,11 @@ def imagenes(imagen):
     print(imagen)
     return send_from_directory(os.path.join('templates/sitio/img/libros'),imagen)
 
+#enlazar los archivos css
+@app.route('/css/<archivocss>')
+def css(archivocss):
+    return send_from_directory(os.path.join("templates/sitio/css"), archivocss)
+
 
 @app.route('/libros')
 def libros():
