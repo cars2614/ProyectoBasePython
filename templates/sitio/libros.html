@@ -3,66 +3,20 @@
 
 
 <div class="row">
-
+    {%for libro in listaLibros: %}
     <div class="col-3">
 
         <div class="card">
-            <img class="card-img-top"
-                src="https://images.cdn2.buscalibre.com/fit-in/360x360/7e/1c/7e1c49e991f48086feb8ad92fff3bcfd.jpg"
-                alt="Title" />
+            <img class="card-img-top" src="/img/libros/{{libro[2]}}" alt="Title" />
             <div class="card-body">
-                <h4 class="card-title">Title</h4>
-                <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit.  </p>
-                <a href="http://" class="btn btn-primary"> Descargar</a>
+                <h4 class="card-title">{{libro[1]}}</h4>
+                <p class="card-text">Si desea puede escribir una descripcion.  </p>
+                <a href="{{libro[3]}}" class="btn btn-primary"> Descargar</a>
             </div>
         </div>
 
-    </div>
-
-    <div class="col-3">
-
-        <div class="card">
-            <img class="card-img-top"
-                src="https://images.cdn2.buscalibre.com/fit-in/360x360/7e/1c/7e1c49e991f48086feb8ad92fff3bcfd.jpg"
-                alt="Title" />
-            <div class="card-body">
-                <h4 class="card-title">Title</h4>
-                <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. </p>
-                <a href="http://" class="btn btn-primary"> Descargar</a>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="col-3">
-
-        <div class="card">
-            <img class="card-img-top"
-                src="https://images.cdn2.buscalibre.com/fit-in/360x360/7e/1c/7e1c49e991f48086feb8ad92fff3bcfd.jpg"
-                alt="Title" />
-            <div class="card-body">
-                <h4 class="card-title">Title</h4>
-                <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p>
-                <a href="http://" class="btn btn-primary"> Descargar</a>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="col-3">
-
-        <div class="card">
-            <img class="card-img-top"
-                src="https://images.cdn2.buscalibre.com/fit-in/360x360/7e/1c/7e1c49e991f48086feb8ad92fff3bcfd.jpg"
-                alt="Title" />
-            <div class="card-body">
-                <h4 class="card-title">Title</h4>
-                <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. </p>
-                <a href="http://" class="btn btn-primary"> Descargar</a>
-            </div>
-        </div>
-
-    </div>
+    </div> 
+    {% endfor %}       
 
 </div>
 

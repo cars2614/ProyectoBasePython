@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from flask import render_template 
+from flask import render_template, session
 from flask import url_for
 from flask import request                 #recepciona la informacion "DEL FORMULARIO"
 from flask import redirect                #redirecciona "MUESTRA LA INFORMACION PARA LAS TABLAS"
@@ -12,6 +12,7 @@ import os
 
        
 app = Flask(__name__) #se crea la aplicacion
+app.secret_key="ingRamirez"
 
 # Configuración de la conexión MySQL usando MySQL X Protocol
 config = {
@@ -42,7 +43,16 @@ def imagenes(imagen):
 
 @app.route('/libros')
 def libros():
-    return render_template('sitio/libros.html')
+
+    conn = mysql.connector.connect(**config) # Crear una conexión al servidor MySQL
+    cursor = conn.cursor() # Crear un cursor para ejecutar comandos SQL    
+    cursor.execute('SELECT * FROM libros') # Ejecutar una consulta SQL     
+    listaLibros = cursor.fetchall() # Obtener los resultados de la consulta
+    # Cerrar el cursor y la conexión
+    cursor.close()
+    conn.close()
+
+    return render_template('sitio/libros.html', listaLibros = listaLibros)
 
 
 @app.route('/nosotros')
@@ -53,14 +63,53 @@ def nosotros():
 
 @app.route('/admin/')
 def admin_index():
+
+    """ Preguntamos si el usuario esta logeado o 
+        tiene una session activa """
+    if  not 'login' in session:
+        return redirect('/admin/loginAdmin') 
+
     return render_template('admin/index.html')
 
-@app.route('/admin/login')
+@app.route('/admin/loginAdmin')
 def admin_login():
-    return render_template('loginAdmin.html')
+    return render_template('admin/loginAdmin.html')
+
+""" Ruta para login, solo se valida por codigo, NO por 
+    base de datos """
+@app.route('/admin/loginAdmin', methods=['POST'])
+def admin_login_post():
+
+    usuario  = request.form['usuario']
+    password = request.form['password']
+    #verifica que llega
+    print(usuario,password)
+
+    if usuario == "carlos" and password == "1234":
+        session["login"] = True
+        session["user"] = "Carlos"
+
+        return redirect('/admin')
+    else:
+        print(f"datos incorrectos")
+
+    return render_template('admin/loginAdmin.html')
+
+@app.route('/admin/cerrar')
+def admin_cerrar_session():
+    session.clear()
+    return redirect('/admin/loginAdmin')
+
 
 @app.route('/librosAdmin')
 def admin_libros():
+
+    """ Preguntamos si el usuario esta logeado o 
+        tiene una session activa """
+    if  not 'login' in session:
+        return redirect('/admin/loginAdmin') 
+
+
     """ Esta funcion me sirve para mostrar todos los libros de mi base de datos          
           """
     conn = mysql.connector.connect(**config) # Crear una conexión al servidor MySQL
@@ -80,6 +129,11 @@ def admin_libros():
 
 @app.route('/admin/librosAdmin/guardar', methods=['POST']) # Recibe los datos enviados por POST
 def admin_libros_guardar():
+        
+        """ Preguntamos si el usuario esta logeado o 
+        tiene una session activa """
+        if  not 'login' in session:
+            return redirect('/admin/loginAdmin') 
         
         """ Esta funcion me sirve para ingresar los datos enviados 
          mediente un formulario a mi base de datos. """   
@@ -127,6 +181,11 @@ def admin_libros_guardar():
             
 @app.route('/admin/librosAdmin/borrar',methods=['POST'])
 def admin_libros_borrar():  
+
+    """ Preguntamos si el usuario esta logeado o 
+        tiene una session activa """
+    if  not 'login' in session:
+        return redirect('/admin/loginAdmin') 
 
     id_libro = request.form['id_libro']
  
