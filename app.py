@@ -65,6 +65,11 @@ def nosotros():
     return render_template('sitio/nosotros.html')
 
 
+@app.route('/xx')
+def xx():
+    return render_template('sitio/xx.html')
+
+
 
 @app.route('/admin/')
 def admin_index():
