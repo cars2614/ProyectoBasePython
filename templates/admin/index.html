@@ -14,7 +14,24 @@
 
 </div>
 
+<input type="submit" class="btn btn-primary" value="prueba" onclick=" xx()" >
 
 
+
+<!-- se llama a la funcion para cada boton -->
+<script>
+    /* se puede aplicar a cualquier boton utilizando onclick=" xx() en el input */
+    function xx() {
+
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Your work has been saved",
+            showConfirmButton: false,
+            timer: 1500
+        });
+
+    }
+</script>
         
 {% include 'admin/pieAdmin.html' %}

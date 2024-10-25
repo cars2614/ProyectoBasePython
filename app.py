@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from flask import flash, get_flashed_messages # se importan para poder enviar mensajes a sweetAlerte2
 from flask import render_template, session
 from flask import url_for
 from flask import request                 #recepciona la informacion "DEL FORMULARIO"
@@ -14,7 +15,7 @@ import os
 
        
 app = Flask(__name__) #se crea la aplicacion
-app.secret_key="ingRamirez"
+app.secret_key="ingRamirez"  
 
 # Configuración de la conexión MySQL usando MySQL X Protocol
 config = {
@@ -67,9 +68,6 @@ def nosotros():
     return render_template('sitio/nosotros.html')
 
 
-@app.route('/xx')
-def xx():
-    return render_template('sitio/xx.html')
 
 
 
@@ -116,7 +114,7 @@ def admin_cerrar_session():
 
 
 @app.route('/librosAdmin')
-def admin_libros():
+def librosAdmin():
 
     """ Preguntamos si el usuario esta logeado o 
         tiene una session activa """
@@ -142,57 +140,52 @@ def admin_libros():
     
 
 @app.route('/admin/librosAdmin/guardar', methods=['POST']) # Recibe los datos enviados por POST
-def admin_libros_guardar():
+def admin_libros_guardar():  
+                     
         
-        """ Preguntamos si el usuario esta logeado o 
-        tiene una session activa """
-        if  not 'login' in session:
-            return redirect('/admin/loginAdmin') 
+    """ Preguntamos si el usuario esta logeado o 
+    tiene una session activa """
+    if  not 'login' in session:
+        return redirect('/admin/loginAdmin') 
+    
+    """ Esta funcion me sirve para ingresar los datos enviados 
+     mediente un formulario a mi base de datos. """                  
+    
+    nombre_libro = request.form['nombre_libro']
+    imagen_libro = request.files['imagen_libro'] #se debe recibir como documento
+    url_libro    = request.form['url_libro']
+    """ El siguente codigo es para cambiarle el nombre a la imagen 
+    se cambia para que no genere conflicto con el nombre de la imagen 
+    al momento de almacenarla """
+    #variable tiempo para cambiar el nombre de la imagen
+    tiempo = datetime.now()
+    horaActual = tiempo.strftime('%Y%H%M%S')
+    #cambio de nombre de la imagen y guardado
+    if imagen_libro.filename!="":
+           nuevoNombreImagen = f"{horaActual}_{imagen_libro.filename}"
+           imagen_libro.save("templates/sitio/img/libros/"+nuevoNombreImagen)
+    conn = mysql.connector.connect(**config) # Crear una conexión al servidor MySQL
+    datos = (nombre_libro,nuevoNombreImagen,url_libro)  #Agregamos los datos a la consulta
+    sql = "INSERT INTO `libros` (`nombre_libro`, `imagen_libro`, `url_libro`) VALUES (%s,%s,%s);"        
+    cursor = conn.cursor() # Crear un cursor para ejecutar comandos SQL
+    cursor.execute(sql, datos) # Ejecutar una consulta SQL 
+    conn.commit() #confirma la insercion SQL.... sin este paso no se ejecuta nada
+    
+    # Cerrar el cursor y la conexión
+    cursor.close()
+    conn.close()
         
-        """ Esta funcion me sirve para ingresar los datos enviados 
-         mediente un formulario a mi base de datos. """   
-             
-        """ verifica si llegan bien los datos
-        print(request.form['nombreLibro'])
-        print(request.files['imagenLibro']) #este se debe recibir como un archivo
-        print(request.form['urlDescarga']) """
-
-        nombre_libro = request.form['nombre_libro']
-        imagen_libro = request.files['imagen_libro'] #se debe recibir como documento
-        url_libro    = request.form['url_libro']
-
-        """ El siguente codigo es para cambiarle el nombre a la imagen 
-         se cambia para que no genere conflicto con el nombre de la imagen 
-          al momento de almacenarla """
-        #variable tiempo para cambiar el nombre de la imagen
-        tiempo = datetime.now()
-        horaActual = tiempo.strftime('%Y%H%M%S')
-
-        #cambio de nombre de la imagen y guardado
-        if imagen_libro.filename!="":
-
-            nuevoNombreImagen = f"{horaActual}_{imagen_libro.filename}"
-            imagen_libro.save("templates/sitio/img/libros/"+nuevoNombreImagen)
-
-        conn = mysql.connector.connect(**config) # Crear una conexión al servidor MySQL
-
-        datos = (nombre_libro,nuevoNombreImagen,url_libro)  #Agregamos los datos a la consulta
-        sql = "INSERT INTO `libros` (`nombre_libro`, `imagen_libro`, `url_libro`) VALUES (%s,%s,%s);"        
-        cursor = conn.cursor() # Crear un cursor para ejecutar comandos SQL
-        cursor.execute(sql, datos) # Ejecutar una consulta SQL 
-        conn.commit() #confirma la insercion SQL.... sin este paso no se ejecuta nada
-        # Cerrar el cursor y la conexión
-        cursor.close()
-        conn.close()
-        
-   
-        return redirect('/librosAdmin')
-   
-
-
-        
-
+    """
+    se envia un mensaje de confirmacion a la ruta librosAdmin
+    para que dicha ruta muestre la vista y el mensaje
+    """ 
+    flash("Libro Ingresado Correctamente")
+    
+    return redirect(url_for('librosAdmin') )
             
+         
+        
+         
 @app.route('/admin/librosAdmin/borrar',methods=['POST'])
 def admin_libros_borrar():  
 
