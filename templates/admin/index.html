@@ -1,0 +1,40 @@
+{% include 'admin/cabeceraAdmin.html' %}
+
+
+<div class="p-5 bg-light">
+
+    <div class="container">
+        <h1 class="display-3">Bienvenido <strong>{{ session["user"] }}</strong> al administrador</h1>
+        <p class="lead">Aqui administrara los libros del sitio web</p>
+        <hr class="my-2">
+     
+        <p class="lead"></p>
+        <a href="/libros" class="btn btn-primary"> Empezar la gestion </a>
+    </div>
+
+</div>
+
+<input type="submit" class="btn btn-primary" value="prueba" onclick=" xx()" >
+
+<iframe
+    src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2376.2099138870194!2d-75.20132039419671!3d4.436148882204842!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1ses-419!2sco!4v1729886284173!5m2!1ses-419!2sco"
+    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+<!-- se llama a la funcion para cada boton -->
+<script>
+    /* se puede aplicar a cualquier boton utilizando onclick=" xx() en el input */
+    function xx() {
+
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Your work has been saved",
+            showConfirmButton: false,
+            timer: 1500
+        });
+
+    }
+</script>
+        
+{% include 'admin/pieAdmin.html' %}

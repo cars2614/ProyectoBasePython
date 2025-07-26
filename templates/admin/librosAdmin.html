@@ -1,0 +1,150 @@
+{% include 'admin/cabeceraAdmin.html' %}
+
+
+<div class="row">
+
+
+
+    <!-- Formulario de libros -->
+    <div class="col-md-5">
+        <div class="card">
+
+            <div class="card-header">Datos del Libro</div>
+            <div class="card-body">
+
+                <!--enctype="multipart/form-data" SE DEBE PONER YA QUE ESTAMOS ENVIANDO UNA IMAGEN  -->
+                <form action="/admin/librosAdmin/guardar" method="post" enctype="multipart/form-data">
+
+                    <div class="mb-3">
+                        <label for="nombre_libro" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" name="nombre_libro" id="nombre_libro"
+                            aria-describedby="helpId" placeholder="Escriba el nombre del libro" />
+
+                    </div>
+
+
+
+                    <div class="mb-3">
+                        <label for="imagen_libro" class="form-label">Imagen:</label>
+                        <input type="file" class="form-control" name="imagen_libro" id="imagen_libro"
+                            aria-describedby="helpId" placeholder="Seleccione la Imagen" />
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="url_libro" class="form-label">Url Descarga:</label>
+                        <input type="text" class="form-control" name="url_libro" id="url_libro"
+                            aria-describedby="helpId" placeholder="Escriba URL de desacarga" />
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+
+                </form>
+
+
+            </div>
+            <div class="card-footer text-muted">Footer</div>
+
+        </div>
+    </div>
+    <!-- Fin formulario de libros -->
+
+
+    <!-- tabla de recepcion libros -->
+    <div class="col-md-7">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Imagen</th>
+                        <th scope="col">Url</th>
+                        <th scope="col">Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Ojo, primero va la variable y despues va la lista de datos -->
+                    {% for libro in listaLibros %}
+                    <tr class="">
+                        <td>{{ libro[0] }}</td>
+                        <td>{{ libro[1] }}</td>
+                        <td>
+                            <img src="/img/libros/{{ libro[2] }}" width="60" class="img-fluid rounded-top" alt="" />
+                            <br>
+                            {{ libro[2] }}
+
+
+                        </td>
+                        <td>{{ libro[3] }}</td>
+
+                        <td>
+
+                            <form action="/admin/librosAdmin/borrar" method="post">
+
+                                <!-- se pone transparente mediante hidden -->
+                                <input type="text" class="form-control" name="id_libro" id="id_libro"
+                                    value="{{ libro[0] }}" hidden />
+                                <input class="btn btn-danger" type="submit" value="Eliminar">
+
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <!-- fin tabla -->
+
+    <!-- fin ROW -->
+</div>
+
+
+{% with messages = get_flashed_messages() %}
+
+{% if messages %}
+
+{% for mensaje in messages %}
+
+{% if mensaje == "Libro Eliminado" %}
+<script>
+
+    Swal.fire({
+        title: "Muy Bien....!",
+        text: "{{mensaje}} ",
+        icon: "error"
+    });
+
+</script>
+{% elif mensaje == "Libro Ingresado Correctamente" %}
+
+<script>
+
+    Swal.fire({
+        title: "Muy Bien!",
+        text: "{{mensaje}} ",
+        icon: "success"
+    });
+
+</script>
+
+{% endif %}
+
+{% endfor %}
+
+
+{% endif %}
+{% endwith %}
+
+
+
+
+
+
+{% include 'admin/pieAdmin.html' %}
