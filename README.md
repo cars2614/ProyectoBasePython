@@ -6,7 +6,7 @@ sudo apt update
 sudo apt install python3-venv
 cd /ruta/del/directorio
 python3 -m venv venv
-source venv/bin/activate
+source venv/bin/activate  #importante para arrancar 
 pip install mysql-connector-python
 
 #Para desactivar

@@ -163,6 +163,8 @@ def admin_libros_guardar():
     if imagen_libro.filename!="":
            nuevoNombreImagen = f"{horaActual}_{imagen_libro.filename}"
            imagen_libro.save("templates/sitio/img/libros/"+nuevoNombreImagen)
+
+           
     conn = mysql.connector.connect(**config) # Crear una conexión al servidor MySQL
     datos = (nombre_libro,nuevoNombreImagen,url_libro)  #Agregamos los datos a la consulta
     sql = "INSERT INTO `libros` (`nombre_libro`, `imagen_libro`, `url_libro`) VALUES (%s,%s,%s);"        
