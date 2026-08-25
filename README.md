@@ -1,28 +1,6 @@
 Recomendaciones:
 
-# Crear entorno virtual antes de realizar el proyecto
-# Ubuntu
-sudo apt update
-sudo apt install python3-venv
-cd /ruta/del/directorio
-python3 -m venv venv
-source venv/bin/activate  #importante para arrancar 
-pip install mysql-connector-python
 
-#Para desactivar
-deactivate
-
-# Windows
-python -m venv venv
-venv\Scripts\activate
-.\venv\Scripts\Activate
-pip install mysql-connector-python
-
-#Para desactivar
-deactivate
-
-
-*******************************************************************************************
 
 Guia para realizar el proyecto: https://www.youtube.com/watch?v=TjaG7243BF0&t=632s
 
@@ -44,12 +22,35 @@ Guia para realizar el proyecto: https://www.youtube.com/watch?v=TjaG7243BF0&t=63
 6. Creacion de estructura web:
     carpeta -> templates "debe llamarse asi"
 
+*******************************************************************************************
 # Diseño
 https://bootswatch.com/
 descargar el archivo css 
+*******************************************************************************************
+
+# Crear entorno virtual antes de realizar el proyecto
+# Windows
+python -m venv venv
+venv\Scripts\activate
+.\venv\Scripts\Activate
+pip install mysql-connector-python
+
+#Para desactivar
+deactivate
+*******************************************************************************************
+# Ubuntu
+sudo apt update
+sudo apt install python3-venv
+cd /ruta/del/directorio
+python3 -m venv venv
+source venv/bin/activate  #importante para arrancar 
+pip install mysql-connector-python
+
+#Para desactivar
+deactivate
+*******************************************************************************************
 
 
 
 
 
-# ProyectoBasePython
