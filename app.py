@@ -185,7 +185,64 @@ def admin_libros_guardar():
             
          
         
-         
+@app.route('/admin/librosAdmin/actualizar', methods=['POST']) # Recibe los datos enviados por POST
+def admin_libros_actualizar():
+
+    """ Preguntamos si el usuario esta logeado o 
+        tiene una session activa """
+    if  not 'login' in session:
+        return redirect('/admin/loginAdmin')
+
+    """ Esta funcion me sirve para actualizar los datos de un libro
+     ya existente, enviados mediante un formulario, en mi base de datos. """
+
+    id_libro      = request.form['id_libro']
+    nombre_libro  = request.form['nombre_libro']
+    imagen_libro  = request.files['imagen_libro']       #se debe recibir como documento
+    url_libro     = request.form['url_libro']
+    imagen_actual = request.form['imagen_actual']        #nombre de la imagen que ya tenia el libro
+
+    """ El siguente codigo es para cambiarle el nombre a la imagen
+    se cambia para que no genere conflicto con el nombre de la imagen
+    al momento de almacenarla """
+    #variable tiempo para cambiar el nombre de la imagen
+    tiempo = datetime.now()
+    horaActual = tiempo.strftime('%Y%H%M%S')
+
+    """ Si el usuario selecciono una imagen nueva, se elimina la imagen
+    anterior de la carpeta (para no dejar imagenes huerfanas) y se
+    guarda la nueva. Si no selecciono ninguna, se conserva la que ya
+    tenia el libro """
+    if imagen_libro.filename != "":
+
+        if os.path.exists("templates/sitio/img/libros/"+imagen_actual):
+            os.unlink("templates/sitio/img/libros/"+imagen_actual)
+
+        nuevoNombreImagen = f"{horaActual}_{imagen_libro.filename}"
+        imagen_libro.save("templates/sitio/img/libros/"+nuevoNombreImagen)
+    else:
+        nuevoNombreImagen = imagen_actual
+
+    conn = mysql.connector.connect(**config) # Crear una conexión al servidor MySQL
+    datos = (nombre_libro, nuevoNombreImagen, url_libro, id_libro) #Agregamos los datos a la consulta
+    sql = "UPDATE `libros` SET `nombre_libro` = %s, `imagen_libro` = %s, `url_libro` = %s WHERE `id_libro` = %s;"
+    cursor = conn.cursor() # Crear un cursor para ejecutar comandos SQL
+    cursor.execute(sql, datos) # Ejecutar una consulta SQL
+    conn.commit() #confirma la actualizacion SQL.... sin este paso no se ejecuta nada
+
+    # Cerrar el cursor y la conexión
+    cursor.close()
+    conn.close()
+
+    """
+    se envia un mensaje de confirmacion a la ruta librosAdmin
+    para que dicha ruta muestre la vista y el mensaje
+    """
+    flash("Libro Actualizado Correctamente")
+    return redirect(url_for('librosAdmin'))
+
+
+
 @app.route('/admin/librosAdmin/borrar',methods=['POST'])
 def admin_libros_borrar():  
 

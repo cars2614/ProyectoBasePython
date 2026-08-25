@@ -13,7 +13,16 @@
             <div class="card-body">
 
                 <!--enctype="multipart/form-data" SE DEBE PONER YA QUE ESTAMOS ENVIANDO UNA IMAGEN  -->
-                <form action="/admin/librosAdmin/guardar" method="post" enctype="multipart/form-data">
+                <!-- este mismo formulario se reutiliza para AGREGAR y para EDITAR, -->
+                <!-- la funcion editarLibro() cambia el action, el boton y llena los campos -->
+                <form action="/admin/librosAdmin/guardar" method="post" enctype="multipart/form-data"
+                    id="formLibro">
+
+                    <!-- id del libro que se esta editando, vacio cuando se va a agregar uno nuevo -->
+                    <input type="text" name="id_libro" id="id_libro_form" hidden />
+
+                    <!-- nombre de la imagen actual, se usa para conservarla si no se sube una nueva -->
+                    <input type="text" name="imagen_actual" id="imagen_actual" hidden />
 
                     <div class="mb-3">
                         <label for="nombre_libro" class="form-label">Nombre:</label>
@@ -28,6 +37,7 @@
                         <label for="imagen_libro" class="form-label">Imagen:</label>
                         <input type="file" class="form-control" name="imagen_libro" id="imagen_libro"
                             aria-describedby="helpId" placeholder="Seleccione la Imagen" />
+                        <small class="form-text text-muted" id="ayudaImagen"></small>
 
                     </div>
 
@@ -38,7 +48,9 @@
 
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Agregar</button>
+                    <button type="submit" class="btn btn-primary" id="btnGuardar">Agregar</button>
+                    <button type="button" class="btn btn-secondary" id="btnCancelar" onclick="cancelarEdicion()"
+                        hidden>Cancelar</button>
 
                 </form>
 
@@ -81,7 +93,13 @@
 
                         <td>
 
-                            <form action="/admin/librosAdmin/borrar" method="post">
+                            <!-- boton editar, llena el formulario de la izquierda con los datos de este libro -->
+                            <button type="button" class="btn btn-warning"
+                                onclick="editarLibro('{{ libro[0] }}', '{{ libro[1] }}', '{{ libro[2] }}', '{{ libro[3] }}')">
+                                Editar
+                            </button>
+
+                            <form action="/admin/librosAdmin/borrar" method="post" class="d-inline">
 
                                 <!-- se pone transparente mediante hidden -->
                                 <input type="text" class="form-control" name="id_libro" id="id_libro"
@@ -134,6 +152,18 @@
 
 </script>
 
+{% elif mensaje == "Libro Actualizado Correctamente" %}
+
+<script>
+
+    Swal.fire({
+        title: "Muy Bien!",
+        text: "{{mensaje}} ",
+        icon: "success"
+    });
+
+</script>
+
 {% endif %}
 
 {% endfor %}
@@ -146,5 +176,44 @@
 
 
 
+
+<!-- script para reutilizar el formulario de la izquierda en modo edicion -->
+<script>
+
+    /* rellena el formulario con los datos del libro seleccionado
+       y cambia su action hacia la ruta de actualizar */
+    function editarLibro(id, nombre, imagen, url) {
+
+        document.getElementById('id_libro_form').value = id;
+        document.getElementById('imagen_actual').value = imagen;
+        document.getElementById('nombre_libro').value = nombre;
+        document.getElementById('url_libro').value = url;
+
+        // la imagen no se puede precargar en un input file por seguridad del navegador,
+        // solo se avisa cual es la imagen actual y que subir una nueva es opcional
+        document.getElementById('ayudaImagen').innerText = "Imagen actual: " + imagen + " (dejar vacio para conservarla)";
+
+        document.getElementById('formLibro').action = '/admin/librosAdmin/actualizar';
+        document.getElementById('btnGuardar').innerText = 'Actualizar';
+        document.getElementById('btnCancelar').hidden = false;
+
+        // se sube la pagina para que el usuario vea el formulario ya lleno
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* regresa el formulario a su estado original, para agregar un libro nuevo */
+    function cancelarEdicion() {
+
+        document.getElementById('formLibro').reset();
+        document.getElementById('id_libro_form').value = '';
+        document.getElementById('imagen_actual').value = '';
+        document.getElementById('ayudaImagen').innerText = '';
+
+        document.getElementById('formLibro').action = '/admin/librosAdmin/guardar';
+        document.getElementById('btnGuardar').innerText = 'Agregar';
+        document.getElementById('btnCancelar').hidden = true;
+    }
+
+</script>
 
 {% include 'admin/pieAdmin.html' %}

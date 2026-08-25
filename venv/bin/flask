@@ -1,4 +1,4 @@
-#!/opt/lampp/htdocs/ProyectoBasePython/venv/bin/python3
+#!/Proyectos/Flask/ProyectoBasePython/venv/bin/python3.14
 # -*- coding: utf-8 -*-
 import re
 import sys
