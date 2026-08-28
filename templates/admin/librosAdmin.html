@@ -6,7 +6,7 @@
 
 
     <!-- Formulario de libros -->
-    <div class="col-md-5">
+    <div class="col-md-4">
         <div class="card">
 
             <div class="card-header">Datos del Libro</div>
@@ -15,8 +15,7 @@
                 <!--enctype="multipart/form-data" SE DEBE PONER YA QUE ESTAMOS ENVIANDO UNA IMAGEN  -->
                 <!-- este mismo formulario se reutiliza para AGREGAR y para EDITAR, -->
                 <!-- la funcion editarLibro() cambia el action, el boton y llena los campos -->
-                <form action="/admin/librosAdmin/guardar" method="post" enctype="multipart/form-data"
-                    id="formLibro">
+                <form action="/admin/librosAdmin/guardar" method="post" enctype="multipart/form-data" id="formLibro">
 
                     <!-- id del libro que se esta editando, vacio cuando se va a agregar uno nuevo -->
                     <input type="text" name="id_libro" id="id_libro_form" hidden />
@@ -64,7 +63,7 @@
 
 
     <!-- tabla de recepcion libros -->
-    <div class="col-md-7">
+    <div class="col-md-8">
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -73,7 +72,8 @@
                         <th scope="col">Nombre</th>
                         <th scope="col">Imagen</th>
                         <th scope="col">Url</th>
-                        <th scope="col">Accion</th>
+                        <th scope="col">Editar</th>
+                        <th scope="col">Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,6 +98,9 @@
                                 onclick="editarLibro('{{ libro[0] }}', '{{ libro[1] }}', '{{ libro[2] }}', '{{ libro[3] }}')">
                                 Editar
                             </button>
+                        </td>
+
+                        <td>
 
                             <form action="/admin/librosAdmin/borrar" method="post" class="d-inline">
 
